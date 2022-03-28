@@ -50,7 +50,33 @@ def hot_encode (data, directions):
         data = pd.get_dummies(data, prefix=data.name[:3], drop_first=True)
     return data
 
+## FUNCTION TO TRANSFORM DATA using log_and_normalize AND hot_encode FUNCTIONS :
 
+def transform_data(pred, price):
+    cont=["sqft_living", 'sqft_lot']
+    cat=[ 'grade', 'zipcode', 'view', 'waterfront','yr_built']
+
+    pred_fin=pd.DataFrame([])
+
+    price_fin = log_and_normalize(price, 'log', 1)
+
+    for col in cont:
+        pred_fin[col]=log_and_normalize(pred[col], 'log', 0)
+
+    for col in cat:
+        hot_encode_cols = hot_encode(pred[col], 'yes')
+        pred_fin = pd.concat([pred_fin, hot_encode_cols], axis=1)
+
+    return pred_fin, price_fin
+
+
+def exp_transformed_cols(pred):
+    cont=["sqft_living", 'sqft_lot']
+
+    for col in cont:
+        pred[col]=np.exp(pred[col])
+
+    return pred
 
 
 
