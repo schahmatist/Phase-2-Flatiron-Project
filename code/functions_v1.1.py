@@ -4,6 +4,12 @@ import math
 import pandas as pd
 import itertools
 
+import seaborn as sns
+import matplotlib.pyplot as plt
+
+from scipy import stats
+import statsmodels.api as sm
+from statsmodels.formula.api import ols
 ########################################################### FUNCTIONS
 
 ### FUNCTION FOR LOG TRANSFORMATIONS AND/OR NORMALIZATION 
@@ -31,57 +37,45 @@ def hot_encode (data, directions):
 
 ## FUNCTION TO TRANSFORM DATA using log_and_normalize AND hot_encode FUNCTIONS :
 
-def transform_data(x0, y0):
+def transform_data(pred, price):
+    cont=["sqft_living", 'sqft_lot']
+    cat=[ 'grade', 'zipcode', 'view', 'waterfront','yr_built']
 
-#    cont=[ 'sqft_living','sqft_lot', 'lat','sqft_basement' ] 
-#    nochange=pred[['grade','condition', 'bedrooms', 'renovated','basement','bathrooms']].copy() 
+    pred_fin=pd.DataFrame([])
 
+    price_fin = log_and_normalize(price, 'log', 0)
 
-#    nochange=['grade','condition','basement']
-    nochange=['grade','basement']
-    log=["sqft_living", 'sqft_lot' ]
-    hot=[ 'zipcode', 'waterfront','view']
+    for col in cont:
+        pred_fin[col]=log_and_normalize(pred[col], 'log', 0)
 
-#    ord_cat=pd.DataFrame([])
-#    ord_cat=pd.DataFrame(x0['view2'].cat.codes)
-#    ord_cat.columns=['view']
+    for col in cat:
+        hot_encode_cols = hot_encode(pred[col], 'yes')
+        pred_fin = pd.concat([pred_fin, hot_encode_cols], axis=1)
 
-    asis=x0[nochange]
-
-    x1=pd.DataFrame([])
+    return pred_fin, price_fin
 
 
-    # One log transformations
-    y1=log_and_normalize(y0, 'log', 0)
+def exp_transformed_cols(pred):
+    cont=["sqft_living", 'sqft_lot']
 
-    for col in log:
-        x1[col]=log_and_normalize(x0[col], 'log', 0)
+    for col in cont:
+        pred[col]=np.exp(pred[col])
 
-
-    # One hot encode categoricals
-    for col in hot:
-        new_cols=hot_encode(x0[col], 'yes')
-        x1 = pd.concat([x1, new_cols], axis=1)
-
-#    x1 = pd.concat([x1, ord_cat, asis], axis=1)
-    x1 = pd.concat([x1,  asis], axis=1)
-
-    return x1,y1
-
+    return pred
 
 
 
 ### TO GET COEFFECIENTS FROM MODEL OBJECT
 
-def get_coeff( year,zipcode, grade, water,view, coef_df):
+def get_coeff( year,zipcode,grade, water,view, coef_df):
     intercept=coef_df[coef_df['Column'] == "const"]["Value"].tolist()[0]
     sqft_living_coef=coef_df[coef_df['Column'] == "sqft_living"]["Value"].tolist()[0]
- #   grade_coef=coef_df[coef_df['Column'] == "grade"]["Value"].tolist()[0]
 
     try:
         sqft_lot_coef=coef_df[coef_df['Column'] == "sqft_lot"]["Value"].tolist()[0]
     except:
         sqft_lot_coef=0
+
 
     if water == 'WATERFRONT':
         water_coef=coef_df[coef_df['Column'] == "wat_YES"]["Value"].tolist()[0]

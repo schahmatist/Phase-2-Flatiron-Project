@@ -35,21 +35,16 @@ def transform_data(x0, y0):
 
 #    cont=[ 'sqft_living','sqft_lot', 'lat','sqft_basement' ] 
 #    nochange=pred[['grade','condition', 'bedrooms', 'renovated','basement','bathrooms']].copy() 
+    nochange=['grade']
+    log=["sqft_living", 'sqft_lot']
+    hot=[ 'zipcode', 'waterfront']
 
-
-#    nochange=['grade','condition','basement']
-    nochange=['grade','basement']
-    log=["sqft_living", 'sqft_lot' ]
-    hot=[ 'zipcode', 'waterfront','view']
-
-#    ord_cat=pd.DataFrame([])
-#    ord_cat=pd.DataFrame(x0['view2'].cat.codes)
-#    ord_cat.columns=['view']
+    ord_cat=pd.DataFrame(x0['view2'].cat.codes)
+    ord_cat.columns=['view']
 
     asis=x0[nochange]
 
     x1=pd.DataFrame([])
-
 
     # One log transformations
     y1=log_and_normalize(y0, 'log', 0)
@@ -63,11 +58,47 @@ def transform_data(x0, y0):
         new_cols=hot_encode(x0[col], 'yes')
         x1 = pd.concat([x1, new_cols], axis=1)
 
-#    x1 = pd.concat([x1, ord_cat, asis], axis=1)
-    x1 = pd.concat([x1,  asis], axis=1)
-
+    x1 = pd.concat([x1, ord_cat, asis], axis=1)
     return x1,y1
 
+
+#def transform_data(pred, price): 
+#    other=[]
+#    log=["sqft_living", 'sqft_lot']
+#    hot=[ "grade", 'zipcode', 'yr_built','waterfront','view']
+#
+#    asis=x0[other]
+#    x1=pd.DataFrame([])
+#
+#
+#    cont=["sqft_living", 'sqft_lot' ]
+#    hot=[ 'zipcode', 'waterfront','view' ] 
+#
+#
+#    pred_fin=pd.concat([pred[['grade']], view_cat],axis=1)
+#
+##    pred_fin=pd.DataFrame([])
+#
+#    price_fin = log_and_normalize(price, 'log', 0)
+#
+#    for col in cont:
+#        pred_fin[col]=log_and_normalize(pred[col], 'log', 0)
+#
+#    for col in hot:
+#        hot_encode_cols = hot_encode(pred[col], 'yes')
+#        pred_fin = pd.concat([pred_fin, hot_encode_cols], axis=1)
+#
+#    return pred_fin, price_fin
+
+
+
+def exp_transformed_cols(pred):
+    cont=["sqft_living", 'sqft_lot']
+
+    for col in cont:
+        pred[col]=np.exp(pred[col])
+
+    return pred
 
 
 

@@ -14,10 +14,10 @@ import pandas as pd
 
 # In[394]:
 
-df=pd.read_csv('data/kc_house_data.csv', index_col=0)
+df2=pd.read_csv('data/kc_house_data.csv', index_col=0)
 
-zipcodes=(list(df['zipcode'].sort_values().unique()))
-years=(list(df['yr_built'].sort_values().unique()))
+zipcodes=(list(df2['zipcode'].sort_values().unique()))
+years=(list(df2['yr_built'].sort_values().unique()))
 #years=list(range(1901,2016,1))
 
 title=widgets.Text(

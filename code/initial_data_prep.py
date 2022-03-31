@@ -59,6 +59,8 @@ df['yr_renovated'] = np.where(df['yr_renovated'] == 0, df['yr_built'], df['yr_re
 df=df[df['sqft_basement'] != '?']
 df['sqft_basement']=df['sqft_basement'].astype(float).astype(int)
 
+df['sqft_basement']= np.where(df['sqft_basement'] < 50, 1, df['sqft_basement'])
+
 df['basement']= np.where(df['sqft_basement'] < 90, 0, 1)
 
 # NEW FEATURES
@@ -77,7 +79,16 @@ df['long_range']=pd.cut(df['long'], 30)
 df['coord_range']=np.array(zip(df['lat_range'],df['long_range']))
 
 df['view'] = np.where (df['waterfront'] == 'YES', 'GOOD', df['view'])
-df['view'].fillna(value='AVERAGE',inplace=True)
-df['view2']=df['view'].astype('category')
-df['view2']=df['view2'].cat.reorder_categories(['NONE', 'AVERAGE', 'FAIR', 'GOOD', 'EXCELLENT']) 
+df['view'].fillna(value='NONE',inplace=True)
+
+df['view2'] = np.where (df['view'] == 'FAIR', 'AVERAGE', df['view'])
+df['view2'] = np.where (df['view2'] == 'NONE', 'AVERAGE', df['view2'])
+df['view2'].fillna(value='AVERAGE',inplace=True)
+df['view2']=df['view2'].astype('category')
+df['view2']=df['view2'].cat.reorder_categories(['AVERAGE', 'GOOD', 'EXCELLENT'])
+
+#df['view2']=df['view'].astype('category')
+#df['view2']=df['view2'].cat.reorder_categories(['NONE', 'AVERAGE', 'FAIR', 'GOOD', 'EXCELLENT']) 
+
+
 

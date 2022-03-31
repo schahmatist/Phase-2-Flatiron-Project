@@ -18,8 +18,6 @@ df2=pd.read_csv('data/kc_house_data.csv', index_col=0)
 
 zipcodes=(list(df2['zipcode'].sort_values().unique()))
 years=(list(df2['yr_built'].sort_values().unique()))
-median_price=df2['price'].median()
-
 #years=list(range(1901,2016,1))
 
 title=widgets.Text(
@@ -43,13 +41,6 @@ yearW = widgets.Dropdown(description="Year:", options=years, value=years[-1], la
 style = {'description_width': 'initial', 'handle_color' : 'darkgreen', }
 button_style = {'button_color':'green', 'description_color':'white'}
 
-medianW = widgets.IntText(
-    value=median_price
-    description='Mean House Price to compare with:',
-    disabled=False,
-    style=style,
-    readout_format=','
-)
 
 gradeW = widgets.BoundedIntText(
     value=6,
@@ -92,13 +83,6 @@ waterW = widgets.Checkbox(
     indent=False
 )
 
-basementW = widgets.Checkbox(
-    value=True,
-    description='Incl. basement',
-    disabled=False,
-    indent=False , style=style
-)
-
 
 button = widgets.Button(description="Calculate", style=button_style)
 
@@ -118,10 +102,9 @@ form_item_layout = widgets.Layout(
 form_items = [
     
     widgets.Box([title], layout=widgets.Layout(justify_content='flex-start')),
-    widgets.Box([medianW], layout=widgets.Layout(justify_content='flex-end')),
-    widgets.Box([widgets.Label(value='ZipCode:'), zipW, yearW], layout=form_item_layout, style=style),
+    widgets.Box([widgets.Label(value='ZipCode:'), zipW, yearW], layout=form_item_layout),
     widgets.Box([widgets.Label(value='Grade:'), gradeW], layout=form_item_layout),
-    widgets.Box([widgets.Label(value='House Square Footage:'),  livingW, basementW],  layout=form_item_layout),
+    widgets.Box([widgets.Label(value='House Square Footage:'),  livingW],  layout=form_item_layout),
     widgets.Box([widgets.Label(value='Lot Square Footage:'), lotW], layout=form_item_layout),
     widgets.HBox([widgets.Label(value='View:'), viewW, waterW],  layout=form_item_layout)
 #    widgets.Box([button], layout=widgets.Layout(justify_content='center'))
@@ -131,8 +114,8 @@ form = widgets.Box(form_items, layout=widgets.Layout(
     display='flex',
     flex_flow='column',
     border='solid 3px',
-    width='1000px',
-    height='300px',
+    width='800px',
+    height='250px',
     
 ))
 
