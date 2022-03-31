@@ -50,8 +50,6 @@ df["grade"]=df["grade"].map(lambda x: x.split()[0]).astype(int)
 df['condition'] = df['condition'].apply(enum_category)
 
 df['waterfront'].fillna(value='NO',inplace=True)
-df['view'] = np.where (df['waterfront'] == 'YES', 'GOOD', df['view'])
-df['view'].fillna(value='NONE',inplace=True)
 
 df['renovated']=np.where((df['yr_renovated'].isna() |  df['yr_renovated'] == 0), 0, 1)
 df['yr_renovated'].fillna(value=df['yr_built'],inplace=True)
@@ -78,6 +76,8 @@ df['lat_range']=pd.cut(df['lat'], 30)
 df['long_range']=pd.cut(df['long'], 30)
 df['coord_range']=np.array(zip(df['lat_range'],df['long_range']))
 
+df['view'] = np.where (df['waterfront'] == 'YES', 'GOOD', df['view'])
+df['view'].fillna(value='AVERAGE',inplace=True)
 df['view2']=df['view'].astype('category')
 df['view2']=df['view2'].cat.reorder_categories(['NONE', 'AVERAGE', 'FAIR', 'GOOD', 'EXCELLENT']) 
 
