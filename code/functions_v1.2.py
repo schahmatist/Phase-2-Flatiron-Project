@@ -4,27 +4,21 @@ import math
 import pandas as pd
 import itertools
 
-import seaborn as sns
-import matplotlib.pyplot as plt
-
-from scipy import stats
-import statsmodels.api as sm
-from statsmodels.formula.api import ols
 ########################################################### FUNCTIONS
 
-### FUNCTION FOR LOG TRANSFORMATIONS AND/OR NORMALIZATION 
+### FUNCTION FOR LOG TRANSFORMATIONS AND/OR NORMALIZATION
 
 def log_and_normalize (data, log, norm_type):
     if log == 'log':
-        data = np.log(data) 
+        data = np.log(data)
     if norm_type == 1:
         data = (data-np.mean(data))/np.std(data)  # std normalisation
     elif norm_type == 2:
         data = (data-min(data))/(max(data)-min(data))      #  min_max_min
     elif norm_type == 3:
         data = (data-np.mean(data))/(max(data)-min(data))  # mean norm
-    
-    return data    
+
+    return data
 
 
 
@@ -37,32 +31,40 @@ def hot_encode (data, directions):
 
 ## FUNCTION TO TRANSFORM DATA using log_and_normalize AND hot_encode FUNCTIONS :
 
-def transform_data(pred, price):
-    cont=["sqft_living", 'sqft_lot']
-    cat=[ 'grade', 'zipcode', 'view', 'waterfront','yr_built']
+def transform_data(x0, y0):
 
-    pred_fin=pd.DataFrame([])
+#    cont=[ 'sqft_living','sqft_lot', 'lat','sqft_basement' ]
+#    nochange=pred[['grade','condition', 'bedrooms', 'renovated','basement','bathrooms']].copy()
+#    nochange=['grade','condition','basement']
 
-    price_fin = log_and_normalize(price, 'log', 0)
+#    ord_cat=pd.DataFrame([])
+#    ord_cat=pd.DataFrame(x0['view2'].cat.codes)
+#    ord_cat.columns=['view']
 
-    for col in cont:
-        pred_fin[col]=log_and_normalize(pred[col], 'log', 0)
+    nochange=['basement']
+    log=["sqft_living", 'sqft_lot' ]
+    hot=[ 'grade', 'zipcode', 'waterfront','view', 'yr_built']
 
-    for col in cat:
-        hot_encode_cols = hot_encode(pred[col], 'yes')
-        pred_fin = pd.concat([pred_fin, hot_encode_cols], axis=1)
+    asis=x0[nochange]
 
-    return pred_fin, price_fin
+    x1=pd.DataFrame([])
+
+    # One log transformations
+    y1=log_and_normalize(y0, 'log', 0)
+
+    for col in log:
+        x1[col]=log_and_normalize(x0[col], 'log', 0)
 
 
-def exp_transformed_cols(pred):
-    cont=["sqft_living", 'sqft_lot']
+    # One hot encode categoricals
+    for col in hot:
+        new_cols=hot_encode(x0[col], 'yes')
+        x1 = pd.concat([x1, new_cols], axis=1)
 
-    for col in cont:
-        pred[col]=np.exp(pred[col])
+#    x1 = pd.concat([x1, ord_cat, asis], axis=1)
+    x1 = pd.concat([x1,  asis], axis=1)
 
-    return pred
-
+    return x1,y1
 
 
 ### TO GET COEFFECIENTS FROM MODEL OBJECT
@@ -70,6 +72,7 @@ def exp_transformed_cols(pred):
 def get_coeff( year,zipcode,grade, water,view, coef_df):
     intercept=coef_df[coef_df['Column'] == "const"]["Value"].tolist()[0]
     sqft_living_coef=coef_df[coef_df['Column'] == "sqft_living"]["Value"].tolist()[0]
+    basement_coef=coef_df[coef_df['Column'] == "basement"]["Value"].tolist()[0]
 
     try:
         sqft_lot_coef=coef_df[coef_df['Column'] == "sqft_lot"]["Value"].tolist()[0]
@@ -105,10 +108,6 @@ def get_coeff( year,zipcode,grade, water,view, coef_df):
     else:
         try: view_coef=coef_df[coef_df['Column'].str.endswith(view)]["Value"].tolist()[0]
         except: view_coef=0
-#    try:
-#        sqft_living15_coef=coef_df[coef_df['Column'] == "sqft_living15"]["Value"].tolist()[0]
-#    except:
-#        sqft_living15_coef=0
-    return intercept, sqft_living_coef, year_coef, zipcode_coef, grade_coef,  water_coef, view_coef, sqft_lot_coef
+    return intercept, sqft_living_coef, sqft_lot_coef, basement_coef, year_coef, zipcode_coef, grade_coef,  water_coef, view_coef
 
 

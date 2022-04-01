@@ -40,7 +40,7 @@ viewW = widgets.Dropdown(
 
 yearW = widgets.Dropdown(description="Year:", options=years, value=years[-1], layout=Layout(width='200px'))
 
-style = {'description_width': 'initial', 'handle_color' : 'darkgreen', }
+style = {'description_width': 'initial', 'handle_color' : 'darkgreen' }
 button_style = {'button_color':'green', 'description_color':'white'}
 
 meanW = widgets.IntText(
@@ -75,7 +75,7 @@ livingW = widgets.IntSlider(
 
 lotW = widgets.IntSlider(
     value=15000,
-    min=0,
+    min=1,
     max=100000,
     step=100,
     description='',
@@ -118,8 +118,8 @@ form_item_layout = widgets.Layout(
 form_items = [
     
     widgets.Box([title], layout=widgets.Layout(justify_content='flex-start')),
-    widgets.Box([meanW], layout=widgets.Layout(justify_content='flex-end')),
-    widgets.Box([widgets.Label(value='ZipCode:'), zipW, yearW], layout=form_item_layout, style=style),
+    widgets.Box([meanW], layout=widgets.Layout(justify_content='flex-start')),
+    widgets.Box([widgets.Label(value='ZipCode:'), zipW, yearW], layout=form_item_layout),
     widgets.Box([widgets.Label(value='Grade:'), gradeW], layout=form_item_layout),
     widgets.Box([widgets.Label(value='House Square Footage:'),  livingW, basementW],  layout=form_item_layout),
     widgets.Box([widgets.Label(value='Lot Square Footage:'), lotW], layout=form_item_layout),
@@ -133,7 +133,6 @@ form = widgets.Box(form_items, layout=widgets.Layout(
     border='solid 3px',
     width='1000px',
     height='300px',
-    
 ))
 
 form.box_style='success'

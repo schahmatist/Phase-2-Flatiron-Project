@@ -35,12 +35,11 @@ def transform_data(x0, y0):
 
 #    cont=[ 'sqft_living','sqft_lot', 'lat','sqft_basement' ] 
 #    nochange=pred[['grade','condition', 'bedrooms', 'renovated','basement','bathrooms']].copy() 
-
-
 #    nochange=['grade','condition','basement']
+
     nochange=['basement']
     log=["sqft_living", 'sqft_lot' ]
-    hot=[ 'grade', 'zipcode', 'waterfront','view']
+    hot=[ 'grade', 'zipcode', 'waterfront','view', 'yr_built']
 
 #    ord_cat=pd.DataFrame([])
 #    ord_cat=pd.DataFrame(x0['view2'].cat.codes)
@@ -49,7 +48,6 @@ def transform_data(x0, y0):
     asis=x0[nochange]
 
     x1=pd.DataFrame([])
-
 
     # One log transformations
     y1=log_and_normalize(y0, 'log', 0)
@@ -67,8 +65,6 @@ def transform_data(x0, y0):
     x1 = pd.concat([x1,  asis], axis=1)
 
     return x1,y1
-
-
 
 
 ### TO GET COEFFECIENTS FROM MODEL OBJECT
@@ -94,6 +90,8 @@ def get_coeff( year, zipcode, grade, waterfront, view, coef_df):
         try: zipcode_coef=coef_df[coef_df['Column'].str.endswith(str(zipcode))]["Value"].tolist()[0]
         except: zipcode_coef=0
     
+#    grade_coef=coef_df[coef_df['Column'] == "grade"]["Value"].tolist()[0]
+
     if len(str(grade))!=1 and len(str(grade))!=2:
         grade_coef=0
     else:
@@ -107,16 +105,15 @@ def get_coeff( year, zipcode, grade, waterfront, view, coef_df):
         try: view_coef=coef_df[coef_df['Column'].str.endswith(view)]["Value"].tolist()[0]
         except: view_coef=0
     
+#    sqft_lot_coef=coef_df[coef_df['Column'] == "sqft_lot"]["Value"].tolist()[0]
     try:
         sqft_lot_coef=coef_df[coef_df['Column'] == "sqft_lot"]["Value"].tolist()[0]
     except:
         sqft_lot_coef=0
 
     sqft_living_coef=coef_df[coef_df['Column'] == "sqft_living"]["Value"].tolist()[0]
-#    sqft_lot_coef=coef_df[coef_df['Column'] == "sqft_lot"]["Value"].tolist()[0]
-#    grade_coef=coef_df[coef_df['Column'] == "grade"]["Value"].tolist()[0]
     basement_coef=coef_df[coef_df['Column'] == "basement"]["Value"].tolist()[0]
-    
+   
     return intercept, sqft_living_coef, sqft_lot_coef, basement_coef, year_coef, zipcode_coef, grade_coef,  water_coef, view_coef 
 
 

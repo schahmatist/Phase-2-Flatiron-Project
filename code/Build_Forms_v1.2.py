@@ -91,6 +91,12 @@ waterW = widgets.Checkbox(
     indent=False
 )
 
+basementW = widgets.Checkbox(
+    value=True,
+    description='Incl. basement',
+    disabled=False,
+    indent=False , style=style
+)
 
 button = widgets.Button(description="Calculate", style=button_style)
 
@@ -113,7 +119,7 @@ form_items = [
     widgets.Box([meanW], layout=widgets.Layout(justify_content='flex-start')),
     widgets.Box([widgets.Label(value='ZipCode:'), zipW, yearW], layout=form_item_layout),
     widgets.Box([widgets.Label(value='Grade:'), gradeW], layout=form_item_layout),
-    widgets.Box([widgets.Label(value='House Square Footage:'),  livingW],  layout=form_item_layout),
+    widgets.Box([widgets.Label(value='House Square Footage:'),  livingW, basementW],  layout=form_item_layout),
     widgets.Box([widgets.Label(value='Lot Square Footage:'), lotW], layout=form_item_layout),
     widgets.HBox([widgets.Label(value='View:'), viewW, waterW],  layout=form_item_layout)
 #    widgets.Box([button], layout=widgets.Layout(justify_content='center'))
