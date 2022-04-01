@@ -38,9 +38,9 @@ def transform_data(x0, y0):
 
 
 #    nochange=['grade','condition','basement']
-    nochange=['grade','basement']
+    nochange=['basement']
     log=["sqft_living", 'sqft_lot' ]
-    hot=[ 'zipcode', 'waterfront','view']
+    hot=[ 'grade', 'zipcode', 'waterfront','view']
 
 #    ord_cat=pd.DataFrame([])
 #    ord_cat=pd.DataFrame(x0['view2'].cat.codes)
@@ -73,21 +73,15 @@ def transform_data(x0, y0):
 
 ### TO GET COEFFECIENTS FROM MODEL OBJECT
 
-def get_coeff( year,zipcode, grade, water,view, coef_df):
+
+def get_coeff( year, zipcode, grade, waterfront, view, coef_df):
     intercept=coef_df[coef_df['Column'] == "const"]["Value"].tolist()[0]
-    sqft_living_coef=coef_df[coef_df['Column'] == "sqft_living"]["Value"].tolist()[0]
- #   grade_coef=coef_df[coef_df['Column'] == "grade"]["Value"].tolist()[0]
 
-    try:
-        sqft_lot_coef=coef_df[coef_df['Column'] == "sqft_lot"]["Value"].tolist()[0]
-    except:
-        sqft_lot_coef=0
-
-    if water == 'WATERFRONT':
+    if waterfront == 'WATERFRONT':
         water_coef=coef_df[coef_df['Column'] == "wat_YES"]["Value"].tolist()[0]
     else:
-        water_coef=0
-
+        water_coef=0        
+ 
     if len(str(year)) != 4:
         year_coef=0
     else:
@@ -99,22 +93,31 @@ def get_coeff( year,zipcode, grade, water,view, coef_df):
     else:
         try: zipcode_coef=coef_df[coef_df['Column'].str.endswith(str(zipcode))]["Value"].tolist()[0]
         except: zipcode_coef=0
-
+    
     if len(str(grade))!=1 and len(str(grade))!=2:
         grade_coef=0
     else:
         try: grade_coef=coef_df[coef_df['Column'].str.endswith('gra_'+str(grade))]["Value"].tolist()[0]
         except: grade_coef=0
+    
 
-    if view  not in ['NONE','FAIR','GOOD','EXCELLENT']:
+    if view  not in ['NONE', 'FAIR','GOOD','EXCELLENT']:
         view_coef=0
     else:
         try: view_coef=coef_df[coef_df['Column'].str.endswith(view)]["Value"].tolist()[0]
         except: view_coef=0
-#    try:
-#        sqft_living15_coef=coef_df[coef_df['Column'] == "sqft_living15"]["Value"].tolist()[0]
-#    except:
-#        sqft_living15_coef=0
-    return intercept, sqft_living_coef, year_coef, zipcode_coef, grade_coef,  water_coef, view_coef, sqft_lot_coef
+    
+    try:
+        sqft_lot_coef=coef_df[coef_df['Column'] == "sqft_lot"]["Value"].tolist()[0]
+    except:
+        sqft_lot_coef=0
+
+    sqft_living_coef=coef_df[coef_df['Column'] == "sqft_living"]["Value"].tolist()[0]
+#    sqft_lot_coef=coef_df[coef_df['Column'] == "sqft_lot"]["Value"].tolist()[0]
+#    grade_coef=coef_df[coef_df['Column'] == "grade"]["Value"].tolist()[0]
+    basement_coef=coef_df[coef_df['Column'] == "basement"]["Value"].tolist()[0]
+    
+    return intercept, sqft_living_coef, sqft_lot_coef, basement_coef, year_coef, zipcode_coef, grade_coef,  water_coef, view_coef 
+
 
 

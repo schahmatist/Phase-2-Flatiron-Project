@@ -18,7 +18,7 @@ df2=pd.read_csv('data/kc_house_data.csv', index_col=0)
 
 zipcodes=(list(df2['zipcode'].sort_values().unique()))
 years=(list(df2['yr_built'].sort_values().unique()))
-median_price=df2['price'].median()
+mean_price=df2['price'].mean()
 
 #years=list(range(1901,2016,1))
 
@@ -43,8 +43,8 @@ yearW = widgets.Dropdown(description="Year:", options=years, value=years[-1], la
 style = {'description_width': 'initial', 'handle_color' : 'darkgreen', }
 button_style = {'button_color':'green', 'description_color':'white'}
 
-medianW = widgets.IntText(
-    value=median_price
+meanW = widgets.IntText(
+    value=mean_price,
     description='Mean House Price to compare with:',
     disabled=False,
     style=style,
@@ -118,7 +118,7 @@ form_item_layout = widgets.Layout(
 form_items = [
     
     widgets.Box([title], layout=widgets.Layout(justify_content='flex-start')),
-    widgets.Box([medianW], layout=widgets.Layout(justify_content='flex-end')),
+    widgets.Box([meanW], layout=widgets.Layout(justify_content='flex-end')),
     widgets.Box([widgets.Label(value='ZipCode:'), zipW, yearW], layout=form_item_layout, style=style),
     widgets.Box([widgets.Label(value='Grade:'), gradeW], layout=form_item_layout),
     widgets.Box([widgets.Label(value='House Square Footage:'),  livingW, basementW],  layout=form_item_layout),
