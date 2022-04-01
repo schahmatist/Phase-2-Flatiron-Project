@@ -56,14 +56,11 @@ def get_decade(year):
 
 df2=pd.read_csv('data/kc_house_data.csv', index_col=0)
 df2['decade']=df2['yr_built'].apply(create_decade)
+
 zipcodes=(list(df2['zipcode'].sort_values().unique()))
 #years=(list(df2['yr_built'].sort_values().unique()))
 decades=list(df2['decade'].sort_values().unique())
 mean_price=df2['price'].mean()
-
-#############################################################################################
-
-
 
 style = {'description_width': 'initial', 'handle_color' : 'darkgreen' }
 #button_style = {'button_color':'green', 'description_color':'white'}
@@ -197,6 +194,5 @@ livingW=form_items[4].children[1]
 basementW=form_items[4].children[2]
 lotW=form_items[5].children[1]
 viewW=form_items[6].children[1]
-#waterW=form_items[6].children[2]
-waterW2=form_items[6].children[2]
+waterW=form_items[6].children[2]
 
