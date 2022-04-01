@@ -11,14 +11,59 @@ from IPython.display import display, clear_output
 
 import pandas as pd
 
+#FUNCTION TO GET A DECADE
+
+def create_decade (year):
+    if year > 2009:
+        decade="2010-2029"
+    elif year > 1999 and year <= 2009:
+        decade="2000-2009"
+    elif year >1989 and year <= 1999:
+        decade="1990-1999"
+    elif year >1979 and year <= 1989:
+        decade="1980-1989"
+    elif year >1969 and year <= 1979:
+        decade="1970-1979"
+    elif year >1959 and year <= 1969:
+        decade="1960-1969"
+    elif year > 1949 and year <= 1959:
+        decade="1950-1959"
+    elif year > 1939 and year <= 1949:
+        decade="1940-1949"
+    elif year > 1919 and year <= 1939:
+        decade="1920-1939"
+    elif year >= 1900 and year <= 1919:
+        decade="1900-1919"
+    elif year < 1900:
+        decade="Unknown"
+    else:
+        decade="Unknown"
+
+    return decade
+
+
+def get_decade(year):
+    for decade in df['decade'].unique():
+        interval=decade.split('-')
+
+        if year >= int(interval[0]) and year <= int(interval[1]):
+            decade_col='dec_'+decade
+            return decade_col
+            break
+
 
 # In[394]:
 
 df2=pd.read_csv('data/kc_house_data.csv', index_col=0)
+df2['decade']=df2['yr_built'].apply(create_decade)
 
 zipcodes=(list(df2['zipcode'].sort_values().unique()))
-years=(list(df2['yr_built'].sort_values().unique()))
+#years=(list(df2['yr_built'].sort_values().unique()))
+decades=list(df2['decade'].sort_values().unique())
 mean_price=df2['price'].mean()
+
+style = {'description_width': 'initial', 'handle_color' : 'darkgreen' }
+#button_style = {'button_color':'green', 'description_color':'white'}
 
 title=widgets.Text(
     value='Predicting House Sale Prices for Kings County',
@@ -36,10 +81,9 @@ viewW = widgets.Dropdown(
     value='NONE',
     layout=Layout(width='120px'))
 
-yearW = widgets.Dropdown(description="Year:", options=years, value=years[-1], layout=Layout(width='200px'))
+#yearW = widgets.Dropdown(description="Year:", options=years, value=years[-1], layout=Layout(width='200px'))
+decadeW = widgets.Dropdown(description="Built in:", options=decades, value=decades[-1], layout=Layout(width='200px'))
 
-style = {'description_width': 'initial', 'handle_color' : 'darkgreen' }
-button_style = {'button_color':'green', 'description_color':'white'}
 
 meanW = widgets.IntText(
     value=mean_price,
@@ -98,7 +142,7 @@ basementW = widgets.Checkbox(
     indent=False , style=style
 )
 
-button = widgets.Button(description="Calculate", style=button_style)
+#button = widgets.Button(description="Calculate", style=button_style)
 
 
 # In[400]:
@@ -117,7 +161,8 @@ form_items = [
     
     widgets.Box([title], layout=widgets.Layout(justify_content='flex-start')),
     widgets.Box([meanW], layout=widgets.Layout(justify_content='flex-start')),
-    widgets.Box([widgets.Label(value='ZipCode:'), zipW, yearW], layout=form_item_layout),
+ #   widgets.Box([widgets.Label(value='ZipCode:'), zipW, yearW], layout=form_item_layout),
+    widgets.Box([widgets.Label(value='ZipCode:'), zipW, decadeW], layout=form_item_layout),
     widgets.Box([widgets.Label(value='Grade:'), gradeW], layout=form_item_layout),
     widgets.Box([widgets.Label(value='House Square Footage:'),  livingW, basementW],  layout=form_item_layout),
     widgets.Box([widgets.Label(value='Lot Square Footage:'), lotW], layout=form_item_layout),
@@ -142,7 +187,8 @@ form.box_style='success'
 title=form_items[0].children[0]
 meanW=form_items[1].children[0]
 zipW=form_items[2].children[1]
-yearW=form_items[2].children[2]
+#yearW=form_items[2].children[2]
+decadeW=form_items[2].children[2]
 gradeW=form_items[3].children[1]
 livingW=form_items[4].children[1]
 basementW=form_items[4].children[2]

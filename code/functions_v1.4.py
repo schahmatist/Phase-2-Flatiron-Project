@@ -6,6 +6,7 @@ import itertools
 
 ########################################################### FUNCTIONS
 
+
 ### FUNCTION FOR LOG TRANSFORMATIONS AND/OR NORMALIZATION
 
 def log_and_normalize (data, log, norm_type):
@@ -43,7 +44,7 @@ def transform_data(x0, y0):
 
     nochange=['basement','grade']
     log=["sqft_living", 'sqft_lot' ]
-    hot=[ 'zipcode', 'view',  'waterfront']
+    hot=[ 'decade', 'zipcode', 'view',  'waterfront']
 
     asis=x0[nochange]
 
@@ -68,7 +69,8 @@ def transform_data(x0, y0):
 
 ### TO GET COEFFECIENTS FROM MODEL OBJECT
 
-def get_coeff( year,zipcode, grade, water,view, coef_df):
+def get_coeff( decade,zipcode, grade, water,view, coef_df):
+
     intercept=coef_df[coef_df['Column'] == "const"]["Value"].tolist()[0]
     sqft_living_coef=coef_df[coef_df['Column'] == "sqft_living"]["Value"].tolist()[0]
     sqft_lot_coef=coef_df[coef_df['Column'] == "sqft_lot"]["Value"].tolist()[0]
@@ -80,12 +82,16 @@ def get_coeff( year,zipcode, grade, water,view, coef_df):
     else:
         water_coef=0
 
+    try:
+        decade_coef=coef_df[ coef_df['Column'].str.endswith(decade)] ["Value"].tolist()[0]
+    except:
+        decade_coef=0
 
-    if len(str(year)) != 4:
-        year_coef=0
-    else:
-        try: year_coef=coef_df[coef_df['Column'].str.endswith(str(year))]["Value"].tolist()[0]
-        except: year_coef=0
+#    if len(str(year)) != 4:
+#        year_coef=0
+#    else:
+#        try: year_coef=coef_df[coef_df['Column'].str.endswith(str(year))]["Value"].tolist()[0]
+#        except: year_coef=0
 
     if len(str(zipcode)) != 5:
         zipcode_coef=0
@@ -99,6 +105,6 @@ def get_coeff( year,zipcode, grade, water,view, coef_df):
         try: view_coef=coef_df[coef_df['Column'].str.endswith(view)]["Value"].tolist()[0]
         except: view_coef=0
 
-    return intercept, sqft_living_coef, sqft_lot_coef, basement_coef, water_coef, grade_coef, year_coef, zipcode_coef, view_coef
+    return intercept, sqft_living_coef, sqft_lot_coef, basement_coef, water_coef, grade_coef, decade_coef, zipcode_coef, view_coef
 
 
