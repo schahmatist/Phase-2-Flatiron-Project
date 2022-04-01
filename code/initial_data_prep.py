@@ -65,7 +65,6 @@ df['basement']= np.where(df['sqft_basement'] < 90, 0, 1)
 
 # NEW FEATURES
 df['price_per_sqft']=round(df['price']/df['sqft_living'],2)
-df['decade']=df['yr_built'].apply(get_decade)
 
 #df['decade']=pd.cut(df['yr_built'], 12)
 #df["age"]=2016-df['yr_built']
@@ -74,6 +73,8 @@ df['decade']=df['yr_built'].apply(get_decade)
 #df['same_living_sqft']=(df['sqft_living']-df['sqft_living15'])/df['sqft_living'] 
 #df['same_lot_sqft']=(df['sqft_lot']-df['sqft_lot15'])/df['sqft_lot'] 
 
+
+df['decade']=df['yr_built'].apply(get_decade)
 df['lat_range']=pd.cut(df['lat'], 30)
 df['long_range']=pd.cut(df['long'], 30)
 df['coord_range']=np.array(zip(df['lat_range'],df['long_range']))
