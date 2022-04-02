@@ -6,12 +6,15 @@
 
 *  ## Overview
 
-*  Our objective is to identify key factors which affect house pricing in King County and use those factors in house price prediction
-*  The tool is benefitial for Real Estates Agencies and Developers to estimate how the features of a house will affect its price 
+*  The goal of this project is to develop a predictive model for house pricing in King County.
+*  The model will estimate how the features of a house will affect its price. 
+*  The price estimation tool may be benefitial for Real Estates Agencies and Developers, as well as individual sellers and buyers.
 
 
+<br>
+<br>
 
-# Objectives
+# Challenges
 
 *  Determining how multiple features work individually and together
 *  Quantifying joined features effect
