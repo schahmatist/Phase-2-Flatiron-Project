@@ -14,7 +14,7 @@
 <br>
 <br>
 
-# Challenges
+# Objective
 
 *  Determining how multiple features work individually and together
 *  Quantifying joined features effect
