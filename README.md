@@ -1,6 +1,6 @@
 # Phase 2 Project: Technical Presentation of Price Predictor
 
-<img src="images/problem.jpg" alt="drawing" align="right"  width="380"/> 
+<img src="images/problem.jpg" alt="drawing" align="left"  width="380"/> 
 
 # Objectives
 
@@ -11,8 +11,7 @@
 
 
 
-  <img src="images/solution.jpg" alt="drawing" align="right"  width="350"/> 
-  
+
 # Solution
 
 *  Analyzing 2014-2015 dataset with past sales
@@ -95,11 +94,13 @@ Steps:
 ***
 * ipywidgets were used to create custom ui forms ( Build_Forms_v1.4.py )<br>  
 <br>
-* custom calculate_price function was linked to the input/output of the ui
+* custom calculate_price function was linked to the input/output of the ui  
+<br>
+<br>
 <br>
 
-
 <img src="images/predictor.jpg" alt="drawing" align="center"  width="1200"/> 
+
 
 # Testing
 ***
