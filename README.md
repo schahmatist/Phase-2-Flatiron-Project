@@ -1,86 +1,13 @@
-# Phase 2 Project: Non-Technical Presentation of Price Predictor
-
-
-<img src="images/Home.jpg" alt="drawing" align="center"  width="450"/>  
-
-#  Price Estimation and Analysis <br> for King County Houses
-
-**Authors:** Dmitriy Fisch
-
-
-## Overview
-
-&emsp;&emsp; Our objective is to identify key factors which affect house pricing <br> &emsp;&emsp;   in King County
-and use those factors in house price prediction. <br>
-
-
-
-## How can we estimate a fair price in a growing <br> Real Estate market?
-
-Per [Seattle Met Staff](https://www.seattlemet.com/home-and-real-estate/2022/01/how-expensive-is-a-house-in-seattle-bellevue-redmond-washington) article (Jan 2022):
-- #### In 2012 an average price of a house in King County was \$424,000
-- #### By 2020, prices rose significantly—to \$880,000! 
-- #### In 2021 it is \$1,055,632. 
-<img src="images/seatle_met.png" alt="drawing" align="right"  width="300" />
-
-
-**Knowing the average is not enough!**
-
-  <img src="images/calculate.jpg" alt="drawing" align="right"  width="300" height="300"/>
- 
- #  The Main Three Price Factors <br>
- ***
-  * Location (zipcode)
-  <br>
-  * Quality of materials, construction and design (grade)
-  <br>
-  * Square Footage (not counting a basement)  
-  
-
-<img src="images/location-location-location-1.png" alt="drawing" align="right"  width="300"/>
-
-### Location is important!
-&nbsp;&nbsp;&nbsp;&nbsp;Based on a zipcode average sq. ft. price can increase 300%!
-
- <img src="images/by_zipcode.png" alt="drawing" align="left"  width="1200"/>
-
-<img src="images/Interior.jpg" alt="drawing" align="right"  width="300"/> 
-
-#### Quality is important! 
-Price per square foot doubles when comparing 
-   lowest and highest construction grades  </li> 
-
- </font>  </body> 
-   <img src="images/by_grade.png" alt="drawing" align="left"  width="1000"/>
-
-
-   
-  <img src="images/size_matters.jpg" alt="drawing" align="right"  width="300"/> 
-<body> &emsp; <font size="5"> <h2> Size does matter! </h2> <br>
-   <li>   Larger houses as expected are sold  for more money. </li>  </font>  </body> 
-   <img src="images/by_size.png" alt="drawing" align="left"  width="1200"/>
-   
-   
-
-  <img src="images/nice_view.jpg" alt="drawing" align="right"  width="400"/> 
-  
-  # Other Important Features <br>
-
-  * #### View
-  * #### Frontage along the water
-  <br> 
-  * more...
-  
+# Phase 2 Project: Technical Presentation of Price Predictor
 
 <img src="images/problem.jpg" alt="drawing" align="right"  width="380"/> 
 
-# Too many factors?
-Challenges:
-*  How multiple features above work together?
+# Objectives
+
+*  How multiple features work together?
 *  Quantifying joined features effect
 *  Building a predictive model
 * Building a front end for a customer
-
 
 
 
@@ -121,9 +48,20 @@ All the data is from 2014-2015
 * Lot size
 * Basement
 * House Age
-
 #### Only marginal effect from:
-* Number of bedrooms, bathrooms, and floors
+* Renovation, number of bedrooms, bathrooms, and floors  
+<br>
+<br>
+more on feature analysis - see "analysis_and_regression/Investigation of Features.ipynb"
+
+
+# Initial Data Load and Cleaning
+***
+* #### Loaded the "kc_house_data.csv" using "initial_data_prep.py"
+* #### filled or removed rows with missing properties 
+* #### Construction Grade 3-5 (below the acceptable code) were removed
+* #### Out of 22,000 rows 20,880 were used in the model
+
 
 # Data Modeling
 #### An iterative approach to data modeling 
@@ -134,9 +72,34 @@ All the data is from 2014-2015
 -  Testing against different subset of data
 
 
-#### Building a Front End Tool:
 
-  <img src="images/predictor.jpg" alt="drawing" align="center"  width="1200"/> 
+Steps:
+
+* Prepared data for modeling using custom "transform_data" function (see functions_v1.4.py)  
+
+
+* Created/trained model using statsmodels.OLS  
+
+
+* Made sure r-square is higher than 80%
+***
+
+
+### In addition to automatic -sklearn- methods, custom functions <br> were created to manually get all the coefficients from statsmodels OLS  <br> and calculate the linear slopes formula
+
+* used custom function "calcuate_price" and "get_coeff" to get coefficients from ols model (see functions_v1.4.py)
+
+# Creating UI forms
+***
+#### Building a Front End Tool:
+***
+* ipywidgets were used to create custom ui forms ( Build_Forms_v1.4.py )<br>  
+<br>
+* custom calculate_price function was linked to the input/output of the ui
+<br>
+
+
+<img src="images/predictor.jpg" alt="drawing" align="center"  width="1200"/> 
 
 # Testing
 ***
@@ -146,6 +109,7 @@ We made sure the tool works as expected:
 * Predicted price is within 90-110% of actual price (houses newer than 1980)
 * Predicted price is within 87-113% of actual price (houses older than 1980)
 ***
+More deails about regression testing in  "analysis_and_regression/Regression Tests.ipynb"
 
 # Conclusions
 ***
