@@ -58,6 +58,9 @@ All the data is from 2014-2015
 * Lot size
 * Basement
 * House Age
+<br>
+
+<br>
 #### Only marginal effect from:
 * Renovation, number of bedrooms, bathrooms, and floors  
 <br>
@@ -67,10 +70,10 @@ more on feature analysis - see "analysis_and_regression/Investigation of Feature
 
 # Initial Data Load and Cleaning
 ***
-* #### Loaded the "kc_house_data.csv" using "initial_data_prep.py"
-* #### filled or removed rows with missing properties 
-* #### Construction Grade 3-5 (below the acceptable code) were removed
-* #### Out of 22,000 rows 20,880 were used in the model
+* Loaded the "kc_house_data.csv" using "initial_data_prep.py"
+* Filled or removed rows with missing properties 
+* Construction Grade 3-5 (below the acceptable code) were removed
+* Out of 22,000 rows 20,880 were used in the model
 
 
 # Data Modeling
