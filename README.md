@@ -1,4 +1,88 @@
-# Phase 2 Project: Technical Presentation of Price Predictor
+# Phase 2 Project: Non-Technical Presentation of Price Predictor
+
+
+<img src="images/Home.jpg" alt="drawing" align="center"  width="450"/>  
+
+#  Price Estimation and Analysis <br> for King County Houses
+
+**Authors:** Dmitriy Fisch
+
+
+## Overview
+
+&emsp;&emsp; Our objective is to identify key factors which affect house pricing <br> &emsp;&emsp;   in King County
+and use those factors in house price prediction. <br>
+
+
+
+## How can we estimate a fair price in a growing <br> Real Estate market?
+
+Per [Seattle Met Staff](https://www.seattlemet.com/home-and-real-estate/2022/01/how-expensive-is-a-house-in-seattle-bellevue-redmond-washington) article (Jan 2022):
+- #### In 2012 an average price of a house in King County was \$424,000
+- #### By 2020, prices rose significantly—to \$880,000! 
+- #### In 2021 it is \$1,055,632. 
+<img src="images/seatle_met.png" alt="drawing" align="right"  width="300" />
+
+
+**Knowing the average is not enough!**
+
+  <img src="images/calculate.jpg" alt="drawing" align="right"  width="300" height="300"/>
+ 
+ #  The Main Three Price Factors <br>
+ ***
+  * Location (zipcode)
+  <br>
+  * Quality of materials, construction and design (grade)
+  <br>
+  * Square Footage (not counting a basement)  
+  
+
+<img src="images/location-location-location-1.png" alt="drawing" align="right"  width="300"/>
+
+### Location is important!
+&nbsp;&nbsp;&nbsp;&nbsp;Based on a zipcode average sq. ft. price can increase 300%!
+
+ <img src="images/by_zipcode.png" alt="drawing" align="left"  width="1200"/>
+
+<img src="images/Interior.jpg" alt="drawing" align="right"  width="300"/> 
+
+#### Quality is important! 
+Price per square foot doubles when comparing 
+   lowest and highest construction grades  </li> 
+
+ </font>  </body> 
+   <img src="images/by_grade.png" alt="drawing" align="left"  width="1000"/>
+
+
+   
+  <img src="images/size_matters.jpg" alt="drawing" align="right"  width="300"/> 
+<body> &emsp; <font size="5"> <h2> Size does matter! </h2> <br>
+   <li>   Larger houses as expected are sold  for more money. </li>  </font>  </body> 
+   <img src="images/by_size.png" alt="drawing" align="left"  width="1200"/>
+   
+   
+
+  <img src="images/nice_view.jpg" alt="drawing" align="right"  width="400"/> 
+  
+  # Other Important Features <br>
+
+  * #### View
+  * #### Frontage along the water
+  <br> 
+  * more...
+  
+
+<img src="images/problem.jpg" alt="drawing" align="right"  width="380"/> 
+
+# Too many factors?
+Challenges:
+*  How multiple features above work together?
+*  Quantifying joined features effect
+*  Building a predictive model
+* Building a front end for a customer
+
+
+
 
   <img src="images/solution.jpg" alt="drawing" align="right"  width="350"/> 
   
@@ -9,18 +93,6 @@
 *  Prepairing features for the model
 *  Calculate all the features coefficients 
 *  Testing the results
-
-
-
-<img src="images/problem.jpg" alt="drawing" align="right"  width="380"/> 
-
-# Objectives
-
-*  How multiple features work together?
-*  Quantifying joined features effect
-*  Building a predictive model
-* Building a front end for a customer
-
 
 
 
@@ -53,44 +125,6 @@ All the data is from 2014-2015
 #### Only marginal effect from:
 * Number of bedrooms, bathrooms, and floors
 
-
-```python
-## importing Libraries
-%run code/import_libs.py
-
-from sklearn.model_selection import train_test_split
-from sklearn.linear_model import LinearRegression
-from sklearn.metrics import mean_squared_error
-from sklearn.model_selection import cross_val_score
-
-## Importing Functions
-%run code/functions_v1.4.py
-
-
-
-## Loading and Initial preparation of the data (fillnulls, new features, filtering)
-%run code/initial_data_prep.py
-
-%matplotlib inline
-mean_price_2014_2015=initial_price.mean()[0]
-
-# SPLITTING DATA IN PREDICTORS(X) and price (Y)
-
-initial_pred = df.drop(columns=["price"]).copy()
-initial_price = df[["price"]]
-
-#FILTER
-df=df[~df["grade"].isin([3,4,5])].copy()
-df.shape
-```
-
-
-
-
-    (20880, 28)
-
-
-
 # Data Modeling
 #### An iterative approach to data modeling 
 -  Calculating Efficiency for basic features  
@@ -100,86 +134,9 @@ df.shape
 -  Testing against different subset of data
 
 
-* ## Prepared Data for Modeling using custom "transform_data" function (see functions_v1.4.py)  
+#### Building a Front End Tool:
 
-
-* ## Created/trained model using statsmodels.OLS  
-
-
-* ## Made sure r-square is good  
-
-
-
-```python
-# Create OLS linear model
-pred_fin, price_fin = transform_data(initial_pred, initial_price)
-
-pred_int = sm.add_constant(pred_fin)
-model = sm.OLS(price_fin,pred_int).fit()
-
-coef_df=model.params.reset_index()
-coef_df.columns=["Column","Value"]
-```
-
-# custom functions to get coefficients from <br>OLS and calculate the formula of the slopes
-
-* used custom function "calcuate_price" and "get_coeff" to get coefficients from ols model (see functions_v1.4.py
-
-
-```python
-
-
-#############################################################################
-def calculate_price (sqft_living, decade, basement, zipcode, grade, waterfront, view , sqft_lot,  
-                     mean_price, coef_df=coef_df, output='yes'):
- 
-    if waterfront == 'NO' or not waterfront: 
-        waterfront = 0
-    else: 
-        waterfront = 1
-            
-    b0,b1,b2,b3,b4,b5,b6,b7,b8 = get_coeff( decade, zipcode, grade, waterfront, view, coef_df)
-    y=round( np.exp(b0 + b1*np.log(sqft_living) + b2*np.log(sqft_lot) + b3*basement + b4*waterfront + b5*grade + b6 + b7 + b8) )
-    
-    if output == 'yes': y=y*(mean_price/mean_price_2014_2015)
-    print('{:,.0f}'.format(y))
-    return y,b0,b1,b2,b3,b4,b5,b6,b7,b8
-####################################################################################
-
-```
-
-# Creating UI forms
-
-
-```python
-## Importing Widgets Forms
-%run code/Build_Forms_v1.4.py
-
-
-inp={ 'view':viewW,'waterfront':waterW,
-    'zipcode': zipW, 'decade':decadeW, 'grade':gradeW, 'basement':basementW, "mean_price":meanW,
-    'sqft_living':livingW,'sqft_lot':lotW }
-
-output = widgets.interactive_output(calculate_price, inp )
-
-
-
-ui = widgets.VBox([form, output])
-
-output.layout={'border': '3px solid green', 'width':'150px'}
-
-```
-
-# Building a Front End Tool:
-
-
-```python
-display(ui)
-```
-
-
-    VBox(children=(Box(box_style='success', children=(Box(children=(Text(value='Predicting House Sale Prices for K…
-
+  <img src="images/predictor.jpg" alt="drawing" align="center"  width="1200"/> 
 
 # Testing
 ***

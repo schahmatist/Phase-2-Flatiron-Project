@@ -15,7 +15,7 @@ import pandas as pd
 
 def create_decade (year):
     if year > 2009:
-        decade="2010-2029"
+        decade="2010-2019"
     elif year > 1999 and year <= 2009:
         decade="2000-2009"
     elif year >1989 and year <= 1999:
@@ -41,32 +41,24 @@ def create_decade (year):
 
     return decade
 
-
-def get_decade(year):
-    for decade in df['decade'].unique():
-        interval=decade.split('-')
-
-        if year >= int(interval[0]) and year <= int(interval[1]):
-            decade_col='dec_'+decade
-            return decade_col
-            break
-
-
-# In[394]:
+# Loading data to get the range for zipcodes, dates, and median price
 
 df2=pd.read_csv('data/kc_house_data.csv', index_col=0)
 df2['decade']=df2['yr_built'].apply(create_decade)
+
+# Setting lists of values for dates and decades
+
 zipcodes=(list(df2['zipcode'].sort_values().unique()))
-#years=(list(df2['yr_built'].sort_values().unique()))
 decades=list(df2['decade'].sort_values().unique())
+
 mean_price=df2['price'].mean()
 
 #############################################################################################
 
-
-
 style = {'description_width': 'initial', 'handle_color' : 'darkgreen' }
 #button_style = {'button_color':'green', 'description_color':'white'}
+
+### Configuring individual fields (widgets)
 
 title=widgets.Text(
     value='Predicting House Sale Prices for Kings County',
@@ -76,17 +68,26 @@ title=widgets.Text(
     layout=Layout(width='1200px')
 )
 
-zipW = widgets.Dropdown(description="", options=zipcodes, value=zipcodes[0], layout=Layout(width='100px'))
+zipW = widgets.Dropdown(
+        description="", 
+        options=zipcodes, 
+        value=zipcodes[0], 
+        layout=Layout(width='100px')
+        )
 
 viewW = widgets.Dropdown(
     description="", 
     options=['NONE','FAIR','AVERAGE','GOOD','EXCELLENT'], 
     value='NONE',
-    layout=Layout(width='120px'))
+    layout=Layout(width='120px')
+    )
 
-#yearW = widgets.Dropdown(description="Year:", options=years, value=years[-1], layout=Layout(width='200px'))
-decadeW = widgets.Dropdown(description="Built in:", options=decades, value=decades[-1], layout=Layout(width='200px'))
-
+decadeW = widgets.Dropdown(
+        description="Built in:", 
+        options=decades, 
+        value=decades[-1], 
+        layout=Layout(width='200px')
+        )
 
 meanW = widgets.IntText(
     value=mean_price,
@@ -94,7 +95,7 @@ meanW = widgets.IntText(
     disabled=False,
     style=style,
     readout_format=','
-)
+    )
 
 
 gradeW = widgets.BoundedIntText(
@@ -105,7 +106,7 @@ gradeW = widgets.BoundedIntText(
     description='',
     disabled=False,
     layout=Layout(width='100px')
-)
+    )
 
 livingW = widgets.IntSlider(
     value=1500,
@@ -145,10 +146,8 @@ basementW = widgets.Checkbox(
     indent=False , style=style
 )
 
-#button = widgets.Button(description="Calculate", style=button_style)
 
-
-# In[400]:
+# Creating layouts for individual form items
 
 
 form_item_layout = widgets.Layout(
@@ -160,24 +159,23 @@ form_item_layout = widgets.Layout(
 )
 
 
+# Creating a form and adding the widgets above
+
 form_items = [
-    
     widgets.Box([title], layout=widgets.Layout(justify_content='flex-start')),
     widgets.Box([meanW], layout=widgets.Layout(justify_content='flex-start')),
- #   widgets.Box([widgets.Label(value='ZipCode:'), zipW, yearW], layout=form_item_layout),
     widgets.Box([widgets.Label(value='ZipCode:'), zipW, decadeW], layout=form_item_layout),
     widgets.Box([widgets.Label(value='Grade:'), gradeW], layout=form_item_layout),
     widgets.Box([widgets.Label(value='House Square Footage:'),  livingW, basementW],  layout=form_item_layout),
     widgets.Box([widgets.Label(value='Lot Square Footage:'), lotW], layout=form_item_layout),
     widgets.HBox([widgets.Label(value='View:'), viewW, waterW],  layout=form_item_layout)
-#    widgets.Box([button], layout=widgets.Layout(justify_content='center'))
 ]
 
 form = widgets.Box(form_items, layout=widgets.Layout(
     display='flex',
     flex_flow='column',
     border='solid 3px',
-    width='1000px',
+    width='980',
     height='300px',
     
 ))
@@ -185,18 +183,18 @@ form = widgets.Box(form_items, layout=widgets.Layout(
 form.box_style='success'
 
 
-# In[398]:
+# In[398]: # Not necessary:
 
-title=form_items[0].children[0]
-meanW=form_items[1].children[0]
-zipW=form_items[2].children[1]
+#title=form_items[0].children[0]
+#meanW=form_items[1].children[0]
+#zipW=form_items[2].children[1]
 #yearW=form_items[2].children[2]
-decadeW=form_items[2].children[2]
-gradeW=form_items[3].children[1]
-livingW=form_items[4].children[1]
-basementW=form_items[4].children[2]
-lotW=form_items[5].children[1]
-viewW=form_items[6].children[1]
+#decadeW=form_items[2].children[2]
+#gradeW=form_items[3].children[1]
+#livingW=form_items[4].children[1]
+#basementW=form_items[4].children[2]
+#lotW=form_items[5].children[1]
+#viewW=form_items[6].children[1]
 #waterW=form_items[6].children[2]
-waterW2=form_items[6].children[2]
+#waterW2=form_items[6].children[2]
 

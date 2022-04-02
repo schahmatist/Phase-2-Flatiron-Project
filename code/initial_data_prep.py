@@ -3,7 +3,6 @@ import numpy as np
 
 
 df=pd.read_csv('data/kc_house_data.csv', index_col=0)
-#df.dropna(subset=['waterfront'], inplace=True)
 
 def enum_category(label):
     num=0
@@ -20,7 +19,7 @@ def enum_category(label):
 
 def create_decade (year):
     if year > 2009:
-        decade="2010-2029"
+        decade="2010-2019"
     elif year > 1999 and year <= 2009:
         decade="2000-2009"
     elif year >1989 and year <= 1999:
@@ -59,24 +58,19 @@ df['yr_renovated'].fillna(value=df['yr_built'],inplace=True)
 df['yr_renovated'] = np.where(df['yr_renovated'] == 0, df['yr_built'], df['yr_renovated'])
 
 
-df=df[df['sqft_basement'] != '?']
+df = df[df['sqft_basement'] != '?']
 df['sqft_basement']=df['sqft_basement'].astype(float).astype(int)
-
 df['sqft_basement']= np.where(df['sqft_basement'] < 50, 1, df['sqft_basement'])
 
-df['basement']= np.where(df['sqft_basement'] < 90, 0, 1)
 
 # NEW FEATURES
+
+df['basement']= np.where(df['sqft_basement'] < 90, 0, 1)
 df['price_per_sqft']=round(df['price']/df['sqft_living'],2)
-
-#df["age"]=2016-df['yr_built']
-#df["years_after_renovation"]=2016-df['yr_renovated']
-#df['month_of_sale']=df['date'].apply(lambda x: str.split(x,'/')[0]).astype(int)
-#df['same_living_sqft']=(df['sqft_living']-df['sqft_living15'])/df['sqft_living'] 
-#df['same_lot_sqft']=(df['sqft_lot']-df['sqft_lot15'])/df['sqft_lot'] 
-
-
 df['decade']=df['yr_built'].apply(create_decade)
+
+
+
 df['lat_range']=pd.cut(df['lat'], 30)
 df['long_range']=pd.cut(df['long'], 30)
 df['coord_range']=np.array(zip(df['lat_range'],df['long_range']))
@@ -84,14 +78,19 @@ df['coord_range']=np.array(zip(df['lat_range'],df['long_range']))
 df['view'] = np.where (df['waterfront'] == 'YES', 'GOOD', df['view'])
 df['view'].fillna(value='NONE',inplace=True)
 
-df['view2'] = np.where (df['view'] == 'FAIR', 'AVERAGE', df['view'])
-df['view2'] = np.where (df['view2'] == 'NONE', 'AVERAGE', df['view2'])
-df['view2'].fillna(value='AVERAGE',inplace=True)
-df['view2']=df['view2'].astype('category')
-df['view2']=df['view2'].cat.reorder_categories(['AVERAGE', 'GOOD', 'EXCELLENT'])
+# Various new features that were rejected during tests
+
+#df['view2'] = np.where (df['view'] == 'FAIR', 'AVERAGE', df['view'])
+#df['view2'] = np.where (df['view2'] == 'NONE', 'AVERAGE', df['view2'])
+#df['view2'].fillna(value='AVERAGE',inplace=True)
+#df['view2']=df['view2'].astype('category')
+#df['view2']=df['view2'].cat.reorder_categories(['AVERAGE', 'GOOD', 'EXCELLENT'])
 
 #df['view2']=df['view'].astype('category')
 #df['view2']=df['view2'].cat.reorder_categories(['NONE', 'AVERAGE', 'FAIR', 'GOOD', 'EXCELLENT']) 
 
-
-
+#df["age"]=2016-df['yr_built']
+#df["years_after_renovation"]=2016-df['yr_renovated']
+#df['month_of_sale']=df['date'].apply(lambda x: str.split(x,'/')[0]).astype(int)
+#df['same_living_sqft']=(df['sqft_living']-df['sqft_living15'])/df['sqft_living'] 
+#df['same_lot_sqft']=(df['sqft_lot']-df['sqft_lot15'])/df['sqft_lot'] 
