@@ -34,10 +34,6 @@ def hot_encode (data, directions):
 
 def transform_data(x0, y0):
 
-#    cont=[ 'sqft_living','sqft_lot', 'lat','sqft_basement' ]
-#    nochange=pred[['grade','condition', 'bedrooms', 'renovated','basement','bathrooms']].copy()
-#    nochange=['grade','condition','basement']
-
 #    ord_cat=pd.DataFrame([])
 #    ord_cat=pd.DataFrame(x0['view2'].cat.codes)
 #    ord_cat.columns=['view']
@@ -50,7 +46,7 @@ def transform_data(x0, y0):
 
     x1=pd.DataFrame([])
 
-    # One log transformations
+    # log transformations
     y1=log_and_normalize(y0, 'log', 0)
 
     for col in log:
@@ -86,12 +82,6 @@ def get_coeff( decade,zipcode, grade, water,view, coef_df):
         decade_coef=coef_df[ coef_df['Column'].str.endswith(decade)] ["Value"].tolist()[0]
     except:
         decade_coef=0
-
-#    if len(str(year)) != 4:
-#        year_coef=0
-#    else:
-#        try: year_coef=coef_df[coef_df['Column'].str.endswith(str(year))]["Value"].tolist()[0]
-#        except: year_coef=0
 
     if len(str(zipcode)) != 5:
         zipcode_coef=0
