@@ -47,10 +47,10 @@ def transform_data(x0, y0):
     x1=pd.DataFrame([])
 
     # log transformations
-    y1=log_and_normalize(y0, 'log', 1)
+    y1=log_and_normalize(y0, 'log', 0)
 
     for col in log:
-        x1[col]=log_and_normalize(x0[col], 'log', 1)
+        x1[col]=log_and_normalize(x0[col], 'log', 0)
 
 
     # One hot encode categoricals
